@@ -125,7 +125,7 @@ export default function Movement() {
           )}
 
           {/* 操作バー */}
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm px-5 py-4 mb-5 flex items-center gap-4 flex-wrap">
+          <div className="bg-white border border-gray-200 rounded-xl shadow-sm px-4 py-3 md:px-5 md:py-4 mb-4 md:mb-5 flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-600">移動日</label>
               <input type="date" className="border rounded-lg px-3 py-1.5 text-sm" value={date} onChange={e => setDate(e.target.value)} />
@@ -174,7 +174,7 @@ export default function Movement() {
                     </div>
 
                     {/* ペンカード */}
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="p-3 md:p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                       {pens.map(({ pen, cattle }) => {
                         const penCattleIds = cattle.map(c => c.id);
                         const allChecked = penCattleIds.length > 0 && penCattleIds.every(id => selectedIds.has(id));
