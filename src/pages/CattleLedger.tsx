@@ -231,15 +231,27 @@ export default function CattleLedger() {
                   <Row label="入荷日" value={selected.arrivalDate} />
                   <Row label="生年月日" value={selected.birthDate} />
                   <Row label="入荷時体重" value={`${selected.arrivalWeight} kg`} />
-                  <Row label="仕入先" value={selected.supplierName ?? '-'} />
-                  <Row label="購入価格" value={selected.purchasePrice ? `¥${selected.purchasePrice.toLocaleString()}` : '-'} />
                   {selected.barnId && (
                     <Row
                       label="現在の所在"
                       value={`${barnMap[selected.barnId]?.name ?? '-'}${selected.penId ? ` / ${penMap[selected.penId]?.name ?? '-'}` : ''}`}
                     />
                   )}
-                  <Row label="備考" value={selected.notes ?? '-'} />
+                  <div className="border-t border-gray-100 pt-2.5 mt-1">
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">取引情報</p>
+                    <dl className="space-y-2.5">
+                      <Row label="入荷元" value={selected.supplierName ?? '-'} />
+                      {selected.entryNumber && <Row label="入場番号" value={selected.entryNumber} />}
+                      {selected.auctionPriceExcTax != null && (
+                        <Row label="セリ価格(税抜)" value={`¥${selected.auctionPriceExcTax.toLocaleString()}`} />
+                      )}
+                      {selected.consumptionTax != null && (
+                        <Row label="消費税額" value={`¥${selected.consumptionTax.toLocaleString()}`} />
+                      )}
+                      <Row label="購買金額(税込)" value={selected.purchasePrice ? `¥${selected.purchasePrice.toLocaleString()}` : '-'} />
+                    </dl>
+                  </div>
+                  {selected.notes && <Row label="備考" value={selected.notes} />}
                 </dl>
               )}
 

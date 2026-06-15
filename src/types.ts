@@ -15,8 +15,8 @@ export interface Barn {
 }
 
 export interface Cattle {
-  id: string; // 耳標番号
-  breed: string; // 品種
+  id: string;                   // 個体識別番号（耳標番号）
+  breed: string;                // 品種
   gender: Gender;
   birthDate: string;
   arrivalDate: string;
@@ -26,7 +26,10 @@ export interface Cattle {
   penId: string | null;
   supplierId?: string;
   supplierName?: string;
-  purchasePrice?: number;
+  entryNumber?: string;         // 入場番号（市場での整理番号）
+  auctionPriceExcTax?: number;  // セリ価格（税抜）
+  consumptionTax?: number;      // 消費税額
+  purchasePrice?: number;       // 購買金額（税込）
   notes?: string;
 }
 
