@@ -8,6 +8,7 @@ import Shipment from './pages/Shipment';
 import BarnMaster from './pages/BarnMaster';
 import Movement from './pages/Movement';
 import Feed from './pages/Feed';
+import Treatment from './pages/Treatment';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/barns" element={<BarnMaster />} />
             <Route path="/movement" element={<Movement />} />
             <Route path="/feed" element={<Feed />} />
+            <Route path="/treatment" element={<Treatment />} />
           </Routes>
         </Layout>
       </BrowserRouter>

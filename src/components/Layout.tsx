@@ -9,6 +9,7 @@ const navItems = [
   { to: '/barns', label: '牛舎マスタ', icon: '🏚' },
   { to: '/movement', label: '移動', icon: '🔄' },
   { to: '/feed', label: '給餌管理', icon: '🌾' },
+  { to: '/treatment', label: '投薬・治療', icon: '💊' },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -70,6 +70,21 @@ export interface FeedRecord {
   notes?: string;
 }
 
+export type TreatmentCategory = '投薬' | '注射' | 'ワクチン' | '手術' | '診察' | 'その他';
+
+export interface TreatmentRecord {
+  id: string;
+  date: string;
+  cattleId: string;
+  category: TreatmentCategory;
+  description: string;   // 処置内容
+  drug?: string;          // 使用薬品
+  dosage?: string;        // 用量・投与量
+  veterinarian?: string;  // 担当獣医・実施者
+  cost: number;           // 費用（円）
+  notes?: string;
+}
+
 export interface AppData {
   barns: Barn[];
   cattle: Cattle[];
@@ -77,4 +92,5 @@ export interface AppData {
   shipmentRecords: ShipmentRecord[];
   movementRecords: MovementRecord[];
   feedRecords: FeedRecord[];
+  treatmentRecords: TreatmentRecord[];
 }

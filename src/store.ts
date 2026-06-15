@@ -9,6 +9,7 @@ const defaultData: AppData = {
   shipmentRecords: [],
   movementRecords: [],
   feedRecords: [],
+  treatmentRecords: [],
 };
 
 export function loadData(): AppData {

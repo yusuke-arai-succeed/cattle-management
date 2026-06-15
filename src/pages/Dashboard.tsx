@@ -24,7 +24,7 @@ export default function Dashboard() {
   }
 
   function clearAll() {
-    setData({ barns: [], cattle: [], intakeRecords: [], shipmentRecords: [], movementRecords: [], feedRecords: [] });
+    setData({ barns: [], cattle: [], intakeRecords: [], shipmentRecords: [], movementRecords: [], feedRecords: [], treatmentRecords: [] });
     setShowConfirm(false);
   }
 

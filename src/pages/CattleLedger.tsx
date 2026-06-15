@@ -1,13 +1,22 @@
 import { useState } from 'react';
 import { useApp } from '../context';
-import type { Cattle } from '../types';
+import type { Cattle, TreatmentCategory } from '../types';
+
+const CATEGORY_COLORS: Record<TreatmentCategory, string> = {
+  投薬:     'bg-orange-100 text-orange-700 border-orange-200',
+  注射:     'bg-blue-100 text-blue-700 border-blue-200',
+  ワクチン: 'bg-purple-100 text-purple-700 border-purple-200',
+  手術:     'bg-red-100 text-red-700 border-red-200',
+  診察:     'bg-teal-100 text-teal-700 border-teal-200',
+  その他:   'bg-gray-100 text-gray-600 border-gray-200',
+};
 
 export default function CattleLedger() {
   const { data } = useApp();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'shipped'>('all');
   const [selected, setSelected] = useState<Cattle | null>(null);
-  const [detailTab, setDetailTab] = useState<'info' | 'movement'>('info');
+  const [detailTab, setDetailTab] = useState<'info' | 'movement' | 'treatment'>('info');
 
   const barnMap = Object.fromEntries(data.barns.map(b => [b.id, b]));
   const penMap = Object.fromEntries(data.barns.flatMap(b => b.pens.map(p => [p.id, p])));
@@ -27,12 +36,20 @@ export default function CattleLedger() {
     setDetailTab('info');
   }
 
-  // 選択中の牛の移動履歴（この牛が含まれるrecordを抽出し日付降順）
+  // 選択中の牛の移動履歴
   const movementHistory = selected
     ? [...data.movementRecords]
         .filter(r => r.cattleIds.includes(selected.id))
         .sort((a, b) => b.date.localeCompare(a.date))
     : [];
+
+  // 選択中の牛の治療履歴
+  const treatmentHistory = selected
+    ? [...(data.treatmentRecords ?? [])]
+        .filter(r => r.cattleId === selected.id)
+        .sort((a, b) => b.date.localeCompare(a.date))
+    : [];
+  const treatmentTotalCost = treatmentHistory.reduce((s, r) => s + r.cost, 0);
 
   return (
     <div>
@@ -189,6 +206,21 @@ export default function CattleLedger() {
                     </span>
                   )}
                 </button>
+                <button
+                  onClick={() => setDetailTab('treatment')}
+                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 ${
+                    detailTab === 'treatment'
+                      ? 'border-green-600 text-green-700'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  治療履歴
+                  {treatmentHistory.length > 0 && (
+                    <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-1.5 py-0.5 rounded-full">
+                      {treatmentHistory.length}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -209,6 +241,51 @@ export default function CattleLedger() {
                   )}
                   <Row label="備考" value={selected.notes ?? '-'} />
                 </dl>
+              )}
+
+              {detailTab === 'treatment' && (
+                <div>
+                  {treatmentHistory.length === 0 ? (
+                    <div className="text-center py-8 text-gray-400 text-sm">治療・投薬記録がありません</div>
+                  ) : (
+                    <div>
+                      <div className="flex justify-end mb-3">
+                        <span className="text-xs text-gray-500">
+                          累計費用: <span className="font-bold text-gray-700">¥{treatmentTotalCost.toLocaleString()}</span>
+                        </span>
+                      </div>
+                      <div className="space-y-3">
+                        {treatmentHistory.map(r => (
+                          <div key={r.id} className="border border-gray-200 rounded-xl p-3">
+                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-xs text-gray-400">{r.date}</span>
+                                <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${CATEGORY_COLORS[r.category as TreatmentCategory]}`}>
+                                  {r.category}
+                                </span>
+                              </div>
+                              {r.cost > 0 && (
+                                <span className="text-xs font-semibold text-gray-700 shrink-0">¥{r.cost.toLocaleString()}</span>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium text-gray-800">{r.description}</p>
+                            {r.drug && (
+                              <p className="text-xs text-gray-500 mt-1">
+                                💊 {r.drug}{r.dosage ? ` — ${r.dosage}` : ''}
+                              </p>
+                            )}
+                            {r.veterinarian && (
+                              <p className="text-xs text-gray-500 mt-0.5">👨‍⚕️ {r.veterinarian}</p>
+                            )}
+                            {r.notes && (
+                              <p className="text-xs text-gray-400 mt-1.5 pt-1.5 border-t border-gray-100">{r.notes}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
 
               {detailTab === 'movement' && (
